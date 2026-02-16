@@ -1,6 +1,55 @@
-# ![RealWorld Example App using Kotlin and Spring](example-logo.png)
+# RealWorld Backend (Adapted for Testing Platform)
 
-[![Actions](https://github.com/gothinkster/spring-boot-realworld-example-app/workflows/Java%20CI/badge.svg)](https://github.com/gothinkster/spring-boot-realworld-example-app/actions)
+This repository is based on the original:
+https://github.com/gothinkster/spring-boot-realworld-example-app
+
+It was adapted to serve as a controlled **System Under Test (SUT)** for an independent quality engineering platform.
+
+---
+
+## 🔧 Modifications from the Original Project
+
+The following changes were introduced to make the backend suitable for testing, CI/CD integration, and containerized deployment:
+
+### Infrastructure
+
+- Switched persistence from SQLite/H2 to **PostgreSQL**
+- Added **docker-compose** configuration with:
+    - Postgres service
+    - health checks
+    - environment-based configuration
+- Added multi-stage **Dockerfile** for production-style container builds
+- Added `.dockerignore`
+- Added `.env` configuration support
+
+### Runtime & Build
+
+- Upgraded to **Java 17 toolchain**
+- Configured Gradle Java toolchain explicitly
+- Adjusted dependencies for compatibility
+- Added Spring Boot Actuator health endpoint:
+    - `/actuator/health`
+
+### Configuration
+
+- Externalized database configuration via environment variables:
+    - `SPRING_DATASOURCE_URL`
+    - `SPRING_DATASOURCE_USERNAME`
+    - `SPRING_DATASOURCE_PASSWORD`
+
+---
+
+## 🎯 Purpose of This Repository
+
+This backend serves as a controlled System Under Test (SUT) used to design and demonstrate:
+- REST API test strategy
+- JWT authentication validation
+- Contract testing (provider verification)
+- CI/CD quality gates
+
+Business logic remains unchanged.
+
+# ![RealWorld Example App using Kotlin and Spring](example-logo.png)
 
 > ### Spring boot + MyBatis codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
@@ -10,7 +59,7 @@ For more information on how to this works with other frontends/backends, head ov
 
 # *NEW* GraphQL Support  
 
-Following some DDD principles. REST or GraphQL is just a kind of adapter. And the domain layer will be consistent all the time. So this repository implement GraphQL and REST at the same time.
+Following some DDD principles. REST or GraphQL is just a kind of adapter. And the domain layer will be consistent all the time. So this repository implements GraphQL and REST at the same time.
 
 The GraphQL schema is https://github.com/gothinkster/spring-boot-realworld-example-app/blob/master/src/main/resources/schema/schema.graphqls and the visualization looks like below.
 
@@ -40,11 +89,16 @@ The secret key is stored in `application.properties`.
 
 # Database
 
-It uses a ~~H2 in-memory database~~ sqlite database (for easy local test without losing test data after every restart), can be changed easily in the `application.properties` for any other database.
+The original project used H2/SQLite for local testing.
+
+This adapted version uses **PostgreSQL** as the primary database engine
+to better simulate production-like persistence behavior.
+
+Database configuration is externalized via environment variables.
 
 # Getting started
 
-You'll need Java 11 installed.
+You'll need Java 17 installed (or compatible toolchain).
 
     ./gradlew bootRun
 
@@ -53,12 +107,18 @@ Alternatively, you can run
 
     curl http://localhost:8080/tags
 
-# Try it out with [Docker](https://www.docker.com/)
+# Run with Docker Compose
 
-You'll need Docker installed.
-	
-    ./gradlew bootBuildImage --imageName spring-boot-realworld-example-app
-    docker run -p 8081:8080 spring-boot-realworld-example-app
+Make sure Docker is installed.
+
+1. Create `.env` file based on `.env.example`
+2. Run:
+
+   docker-compose up --build
+
+Backend will be available at:
+
+    http://localhost:8080
 
 # Try it out with a RealWorld frontend
 
@@ -78,4 +138,5 @@ Use spotless for code format.
 
 # Help
 
-Please fork and PR to improve the project.
+For original project contributions, please refer to the upstream repository:
+https://github.com/gothinkster/spring-boot-realworld-example-app
