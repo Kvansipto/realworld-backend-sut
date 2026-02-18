@@ -4,19 +4,20 @@ import io.spring.core.article.Article;
 import io.spring.core.article.ArticleRepository;
 import io.spring.core.user.User;
 import io.spring.core.user.UserRepository;
+import io.spring.infrastructure.AbstractPostgresContainerTest;
 import io.spring.infrastructure.mybatis.mapper.ArticleMapper;
-import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Arrays;
+
 @ActiveProfiles("test")
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ArticleRepositoryTransactionTest {
+public class ArticleRepositoryTransactionTest
+        extends AbstractPostgresContainerTest {
   @Autowired private ArticleRepository articleRepository;
 
   @Autowired private UserRepository userRepository;
